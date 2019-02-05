@@ -1,15 +1,9 @@
-import math
-
-# import torch.nn.functional as F
 from torch import nn
 import torch
 
+
 class Generator(nn.Module):
-    def __init__(self, scale_factor= 0, tmode=False):
-        if tmode:
-            upsample_block_num = int(math.log(scale_factor, 2))
-        else:
-            upsample_block_num = 0
+    def __init__(self):
 
         super(Generator, self).__init__()
         self.block1 = nn.Sequential(
@@ -24,14 +18,8 @@ class Generator(nn.Module):
         self.block7 = nn.Sequential(
             nn.Conv2d(64, 64, kernel_size=3, padding=1),
             nn.BatchNorm2d(64)
-            # nn.PReLU()
         )
-        if tmode:
-            block8 = [UpsampleBLock(64, 2) for _ in range(upsample_block_num)]
-            block8.append(nn.Conv2d(64, 3, kernel_size=9, padding=4))
-            self.block8 = nn.Sequential(*block8)
-        else:
-            self.block8 = nn.Conv2d(64, 3, kernel_size=9, padding=4)
+        self.block8 = nn.Conv2d(64, 3, kernel_size=9, padding=4)
 
     def forward(self, x):
         block1 = self.block1(x)
@@ -44,6 +32,7 @@ class Generator(nn.Module):
         block8 = self.block8(block1 + block7)
 
         return (torch.tanh(block8) + 1) / 2
+
 
 class ResidualBlock(nn.Module):
     def __init__(self, channels):
@@ -62,18 +51,6 @@ class ResidualBlock(nn.Module):
         residual = self.bn2(residual)
         return x + residual
 
-class UpsampleBLock(nn.Module):
-    def __init__(self, in_channels, up_scale):
-        super(UpsampleBLock, self).__init__()
-        self.conv = nn.Conv2d(in_channels, in_channels * up_scale ** 2, kernel_size=3, padding=1)
-        self.pixel_shuffle = nn.PixelShuffle(up_scale)
-        self.prelu = nn.PReLU()
-
-    def forward(self, x):
-        x = self.conv(x)
-        x = self.pixel_shuffle(x)
-        x = self.prelu(x)
-        return x
 
 class Discriminator(nn.Module):
     def __init__(self):
