@@ -4,4 +4,4 @@ RemoteSystemsTempFiles/
 .idea/
 .ipynb_checkpoints/
 logs/
-data/
+__pycache__/
