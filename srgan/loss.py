@@ -14,7 +14,7 @@ class GeneratorLoss(nn.Module):
         self.loss_network = loss_network
         self.mse_loss = nn.MSELoss()
 
-    def forward(self, out_labels, out_images, target_images, GT_Density, Density):
+    def forward(self, out_labels, out_images, target_images):
         
         # Adversarial Loss
         adversarial_loss = torch.mean(1 - out_labels)
@@ -24,8 +24,5 @@ class GeneratorLoss(nn.Module):
         
         # Image Loss
         image_loss = self.mse_loss(out_images, target_images)
-        
-        # Density Loss
-        density_loss = self.mse_loss(GT_Density, Density)
-        
-        return 0.1 * (image_loss + 0.001 * adversarial_loss + 0.006 * perception_loss) + density_loss
+
+        return image_loss + 0.001 * adversarial_loss + 0.006 * perception_loss
