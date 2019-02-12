@@ -5,4 +5,5 @@ RemoteSystemsTempFiles/
 .ipynb_checkpoints/
 __pycache__/
 logs/
+screenlog.*
 train_srgan_icc.py

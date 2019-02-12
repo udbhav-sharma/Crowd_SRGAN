@@ -27,14 +27,14 @@ def evaluate_model(net, netG, data_loader):
         im_data = im_data.reshape((1,3,im_data.shape[0],im_data.shape[1]))
         gt_count = np.sum(gt_data)
         im_data = torch.from_numpy(im_data).cuda()
+        
         im_data.requires_grad = False
+        im_data = netG(im_data)
         
-        im_data_sr = netG(im_data)
-        im_data_sr_gray = torch.zeros(im_data_sr.size()[0], 1, im_data_sr.size()[2], im_data_sr.size()[3])
-        im_data_sr_gray[:,0,:,:] = (0.2126 * im_data_sr[:,0,:,:] + 0.7152 * im_data_sr[:,1,:,:] + 0.0722 * im_data_sr[:,2,:,:])
-        im_data_sr_gray = im_data_sr_gray.cuda()
+        im_data = (0.2126 * im_data[:,0,:,:] + 0.7152 * im_data[:,1,:,:] + 0.0722 * im_data[:,2,:,:]).unsqueeze(0)
+        im_data = im_data.cuda()
         
-        LR_density_map,HR_density_map = net(im_data_sr_gray)
+        LR_density_map,HR_density_map = net(im_data)
         LR_density_map = LR_density_map.data.cpu().numpy()
         et_countLR = np.sum(LR_density_map)
         HR_density_map = HR_density_map.data.cpu().numpy()
