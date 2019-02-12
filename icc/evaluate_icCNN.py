@@ -12,12 +12,10 @@ import torch.nn as nn
 from .model_ic_CNN import modelicCNN
 import cv2
 
-def evaluate_model(trainedPath,data_loader,ds_flag=False):
-    net = modelicCNN()
-    #net = nn.DataParallel(net)
-    network.load_net(trainedPath, net)
-    net.cuda()
+def evaluate_model(net, netG, data_loader):
     net.eval()
+    netG.eval()
+    
     maeLR = 0.0
     mseLR = 0.0
     maeHR = 0.0
@@ -25,15 +23,18 @@ def evaluate_model(trainedPath,data_loader,ds_flag=False):
     for blob in data_loader:
         im_data = blob['data']
         gt_data = blob['gt_density']
-        if ds_flag:
-            orig_shape = im_data.shape
-            im_data = cv2.resize(im_data, (im_data.shape[1], im_data.shape[0]))
-            im_data = cv2.resize(im_data, (orig_shape[1], orig_shape[0]))
-        im_data = im_data.reshape((1,1,im_data.shape[0],im_data.shape[1]))
+        
+        im_data = im_data.reshape((1,3,im_data.shape[0],im_data.shape[1]))
         gt_count = np.sum(gt_data)
         im_data = torch.from_numpy(im_data).cuda()
         im_data.requires_grad = False
-        LR_density_map,HR_density_map = net(im_data)
+        
+        im_data_sr = netG(im_data)
+        im_data_sr_gray = torch.zeros(im_data_sr.size()[0], 1, im_data_sr.size()[2], im_data_sr.size()[3])
+        im_data_sr_gray[:,0,:,:] = (0.2126 * im_data_sr[:,0,:,:] + 0.7152 * im_data_sr[:,1,:,:] + 0.0722 * im_data_sr[:,2,:,:])
+        im_data_sr_gray = im_data_sr_gray.cuda()
+        
+        LR_density_map,HR_density_map = net(im_data_sr_gray)
         LR_density_map = LR_density_map.data.cpu().numpy()
         et_countLR = np.sum(LR_density_map)
         HR_density_map = HR_density_map.data.cpu().numpy()
