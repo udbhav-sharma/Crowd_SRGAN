@@ -16,8 +16,6 @@ def evaluate_model(net, netG, data_loader):
     net.eval()
     netG.eval()
     
-    maeLR = 0.0
-    mseLR = 0.0
     maeHR = 0.0
     mseHR = 0.0
     for blob in data_loader:
@@ -34,17 +32,14 @@ def evaluate_model(net, netG, data_loader):
         im_data = (0.2126 * im_data[:,0,:,:] + 0.7152 * im_data[:,1,:,:] + 0.0722 * im_data[:,2,:,:]).unsqueeze(0)
         im_data = im_data.cuda()
         
-        LR_density_map,HR_density_map = net(im_data)
-        LR_density_map = LR_density_map.data.cpu().numpy()
-        et_countLR = np.sum(LR_density_map)
+        HR_density_map = net(im_data)
+        
         HR_density_map = HR_density_map.data.cpu().numpy()
         et_countHR = np.sum(HR_density_map)
-        maeLR += abs(gt_count-et_countLR)
-        mseLR += ((gt_count-et_countLR)*(gt_count-et_countLR))
+        
         maeHR += abs(gt_count-et_countHR)
         mseHR += ((gt_count-et_countHR)*(gt_count-et_countHR))
-    maeLR = maeLR/data_loader.get_num_samples()
-    mseLR = np.sqrt(mseLR/data_loader.get_num_samples())
+        
     maeHR = maeHR/data_loader.get_num_samples()
     mseHR = np.sqrt(mseHR/data_loader.get_num_samples())
-    return maeLR,mseLR,maeHR,mseHR
+    return maeHR, mseHR

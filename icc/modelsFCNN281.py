@@ -19,7 +19,7 @@ class FCNN304(nn.Module):
     def __init__(self, bn=False):
         super(FCNN304, self).__init__()
 
-        self.branch1 = nn.Sequential(Conv2d( 281, 196, 7, same_padding=True),
+        self.branch1 = nn.Sequential(Conv2d( 280, 196, 7, same_padding=True),
                                      Conv2d(196, 96, 5, same_padding=True),
                                      nn.UpsamplingBilinear2d(scale_factor=2),
                                      nn.ReLU(),
