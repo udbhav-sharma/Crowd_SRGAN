@@ -111,7 +111,7 @@ class ImageDataLoader():
                     den = cv2.resize(den,(wd_1,ht_1))
                     den = den * ((wd*ht)//(wd_1*ht_1))
 
-                den = den.reshape((1,1,den.shape[0],den.shape[1]))
+#                 den = den.reshape((1,1,den.shape[0],den.shape[1]))
                 blob = {}
                 blob['data']=img
                 blob['gt_density']=den

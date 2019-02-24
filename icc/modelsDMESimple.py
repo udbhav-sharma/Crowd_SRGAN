@@ -19,8 +19,4 @@ class DME2(nn.Module):
         #self.fuse = nn.Sequential(Conv2d( 30, 1, 1, same_padding=True, bn=bn))
 
     def forward(self, im_data):
-        x = self.branch3(im_data)
-        #x = torch.cat((x1,x2,x3),1)
-        #x = self.fuse(x)
-
-        return x
+        return self.branch3(im_data)

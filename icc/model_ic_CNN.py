@@ -29,9 +29,8 @@ class modelicCNN(nn.Module):
     def forward(self, im_data):
         y1 = self.netDME(im_data)
         x1 = self.netGCE(im_data) # LR prediction
-        x1 = torch.cat((y1,x1),1)
-        x1 = self.netFCNN(x1) # HR prediction
-        return x1
+        z1 = torch.cat((y1,x1),1)
+        return self.netFCNN(z1) # HR prediction
 
 class retrain_icCNN(nn.Module):
     def __init__(self, bn=False):

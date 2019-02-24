@@ -35,7 +35,4 @@ class FCNN304(nn.Module):
 
     def forward(self, im_data):
         x1 = self.branch1(im_data)
-        x1 = self.branch2(x1)
-
-
-        return x1
+        return self.branch2(x1)
