@@ -87,9 +87,9 @@ class ImageDataLoader():
                     #img = cv2.imread(os.path.join(self.data_path, fname),0)
                     img = cv2.imread(os.path.join(self.data_path, fname), 1)
                     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-                    img = img/255.
+                    #img = img/255.
                 else:
-                    img = cv2.imread(os.path.join(self.data_path,fname),0)/255.
+                    img = cv2.imread(os.path.join(self.data_path,fname),0)
                     #img = cv2.imread(os.path.join(self.data_path, fname), 1)
                     #img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
                 img = img.astype(np.float32, copy=False)
@@ -111,7 +111,7 @@ class ImageDataLoader():
                     den = cv2.resize(den,(wd_1,ht_1))
                     den = den * ((wd*ht)//(wd_1*ht_1))
 
-                den = den.reshape((1,1,den.shape[0],den.shape[1]))
+#                 den = den.reshape((1,1,den.shape[0],den.shape[1]))
                 blob = {}
                 blob['data']=img
                 blob['gt_density']=den
