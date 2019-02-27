@@ -30,6 +30,7 @@ class ImageDataLoader():
                 if self.sr_mode:
                     img = cv2.imread(os.path.join(self.data_path, fname), 1)
                     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                    img = img/255.
                 else:
                     img = cv2.imread(os.path.join(self.data_path,fname),0)
 
@@ -87,7 +88,7 @@ class ImageDataLoader():
                     #img = cv2.imread(os.path.join(self.data_path, fname),0)
                     img = cv2.imread(os.path.join(self.data_path, fname), 1)
                     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-                    #img = img/255.
+                    img = img/255.
                 else:
                     img = cv2.imread(os.path.join(self.data_path,fname),0)
                     #img = cv2.imread(os.path.join(self.data_path, fname), 1)

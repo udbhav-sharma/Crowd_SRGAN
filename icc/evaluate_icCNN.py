@@ -32,19 +32,18 @@ def evaluate_model(net, netG, data_loader):
             
             im_data = netG(im_data)
 
-            im_data = (0.299 * im_data[:,0,:,:] + 0.587 * im_data[:,1,:,:] + 0.114 * im_data[:,2,:,:])
+            im_data = 255 * (0.299 * im_data[:,0,:,:] + 0.587 * im_data[:,1,:,:] + 0.114 * im_data[:,2,:,:])
             im_data = im_data.expand(1, im_data.size()[0], im_data.size()[1], im_data.size()[2])
             im_data = im_data.cuda()
 
             HR_density_map = net(im_data)
 
-            HR_density_map = HR_density_map.data.cpu().numpy()
-            et_countHR = np.sum(HR_density_map)
+            et_countHR = np.sum(HR_density_map.data.cpu().numpy())
 
             maeHR += abs(gt_count-et_countHR)
             mseHR += ((gt_count-et_countHR)*(gt_count-et_countHR))
         
-        del im_data
+        del im_data, HR_density_map
         
     maeHR = maeHR/data_loader.get_num_samples()
     mseHR = np.sqrt(mseHR/data_loader.get_num_samples())
