@@ -8,3 +8,4 @@ logs/
 screenlog.*
 train_srgan_icc.py
 *.pyc
+dense/
