@@ -8,7 +8,7 @@ class DME2(nn.Module):
         super(DME2, self).__init__()
 
 
-        self.branch3 = nn.Sequential(Conv2d( 1, 16, 7, same_padding=True, bn=bn),
+        self.branch3 = nn.Sequential(Conv2d( 3, 16, 7, same_padding=True, bn=bn),
                                      nn.MaxPool2d(2),
                                      Conv2d(16, 24, 5, same_padding=True, bn=bn),
                                      nn.MaxPool2d(2),

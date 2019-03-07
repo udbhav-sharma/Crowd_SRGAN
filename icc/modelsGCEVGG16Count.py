@@ -32,5 +32,6 @@ class GCEVGG16(nn.Module):
 
 
     def forward(self, im_data):
-        x1 = torch.cat((im_data,im_data,im_data),1)
+#         x1 = torch.cat((im_data,im_data,im_data),1)
+        x1 = im_data
         return self.vgg16(x1)
